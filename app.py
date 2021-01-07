@@ -11,11 +11,16 @@ mongo = PyMongo(app)
 @app.route("/")
 def index():
    mars = mongo.db.mars.find_one()
+   return render_template("index.html", mars=mars)
+
+@app.route("/scrape")
+def scrape():
+   mars = mongo.db.mars
    mars_data = scraping.scrape_all()
    mars.update({}, mars_data, upsert=True)
-   return render_template("index.html", mars=mars)
+   return "Scraping Successful!"
 
 # .update(query_parameter, data, options)
 
 if __name__ == "__main__":
-   app.run()
+   app.run(debug=True)
